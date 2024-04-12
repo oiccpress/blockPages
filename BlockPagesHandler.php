@@ -14,23 +14,23 @@
  * @brief Find static page content and display it when requested.
  */
 
-namespace APP\plugins\generic\staticPages;
+namespace APP\plugins\generic\blockPages;
 
 use APP\core\Application;
-use APP\plugins\generic\staticPages\classes\StaticPage;
+use APP\plugins\generic\blockPages\classes\BlockPage;
 use APP\template\TemplateManager;
 use PKP\core\PKPRequest;
 use PKP\security\Role;
 
-class StaticPagesHandler extends \APP\handler\Handler
+class BlockPagesHandler extends \APP\handler\Handler
 {
-    /** @var StaticPagesPlugin The static pages plugin */
+    /** @var BlockPagesPlugin The static pages plugin */
     protected $plugin;
 
-    /** @var StaticPage The static page to view */
+    /** @var BlockPage The static page to view */
     protected $staticPage;
 
-    public function __construct(StaticPagesPlugin $plugin, StaticPage $staticPage)
+    public function __construct(BlockPagesPlugin $plugin, BlockPage $staticPage)
     {
         $this->plugin = $plugin;
         $this->staticPage = $staticPage;

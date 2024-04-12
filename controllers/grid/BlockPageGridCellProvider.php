@@ -14,7 +14,7 @@
  * @brief Class for a cell provider to display information about static pages
  */
 
-namespace APP\plugins\generic\staticPages\controllers\grid;
+namespace APP\plugins\generic\blockPages\controllers\grid;
 
 use PKP\controllers\grid\GridCellProvider;
 use PKP\controllers\grid\GridColumn;
@@ -23,7 +23,7 @@ use PKP\core\PKPApplication;
 use PKP\linkAction\LinkAction;
 use PKP\linkAction\request\RedirectAction;
 
-class StaticPageGridCellProvider extends GridCellProvider
+class BlockPageGridCellProvider extends GridCellProvider
 {
     //
     // Template methods from GridCellProvider
@@ -48,7 +48,7 @@ class StaticPageGridCellProvider extends GridCellProvider
                     'details',
                     new RedirectAction(
                         $dispatcher->url($request, PKPApplication::ROUTE_PAGE, null) . '/' . $staticPage->getPath(),
-                        'staticPage'
+                        'blockPage'
                     ),
                     htmlspecialchars($staticPage->getPath())
                 )];

@@ -14,11 +14,11 @@
  * @brief Handle static pages grid requests.
  */
 
-namespace APP\plugins\generic\staticPages\controllers\grid;
+namespace APP\plugins\generic\blockPages\controllers\grid;
 
-use APP\plugins\generic\staticPages\classes\StaticPagesDAO;
-use APP\plugins\generic\staticPages\controllers\grid\form\StaticPageForm;
-use APP\plugins\generic\staticPages\StaticPagesPlugin;
+use APP\plugins\generic\blockPages\classes\BlockPagesDAO;
+use APP\plugins\generic\blockPages\controllers\grid\form\BlockPageForm;
+use APP\plugins\generic\blockPages\BlockPagesPlugin;
 use PKP\controllers\grid\GridColumn;
 use PKP\controllers\grid\GridHandler;
 use PKP\core\JSONMessage;
@@ -31,20 +31,20 @@ use PKP\linkAction\request\AjaxModal;
 use PKP\security\authorization\ContextAccessPolicy;
 use PKP\security\Role;
 
-class StaticPageGridHandler extends GridHandler
+class BlockPageGridHandler extends GridHandler
 {
-    /** @var StaticPagesPlugin The static pages plugin */
+    /** @var BlockPageGridHandler The static pages plugin */
     public $plugin;
 
     /**
      * Constructor
      */
-    public function __construct(StaticPagesPlugin $plugin)
+    public function __construct(BlockPagesPlugin $plugin)
     {
         parent::__construct();
         $this->addRoleAssignment(
             [Role::ROLE_ID_MANAGER],
-            ['index', 'fetchGrid', 'fetchRow', 'addStaticPage', 'editStaticPage', 'updateStaticPage', 'delete']
+            ['index', 'fetchGrid', 'fetchRow', 'addBlockPage', 'editBlockPage', 'updateBlockPage', 'delete']
         );
         $this->plugin = $plugin;
     }
@@ -73,41 +73,41 @@ class StaticPageGridHandler extends GridHandler
         $context = $request->getContext();
 
         // Set the grid details.
-        $this->setTitle('plugins.generic.staticPages.staticPages');
-        $this->setEmptyRowText('plugins.generic.staticPages.noneCreated');
+        $this->setTitle('plugins.generic.blockPages.blockPages');
+        $this->setEmptyRowText('plugins.generic.blockPages.noneCreated');
 
         // Get the pages and add the data to the grid
-        /** @var StaticPagesDAO */
-        $staticPagesDao = DAORegistry::getDAO('StaticPagesDAO');
+        /** @var BlockPagesDAO */
+        $staticPagesDao = DAORegistry::getDAO('BlockPagesDAO');
         $this->setGridDataElements($staticPagesDao->getByContextId($context->getId()));
 
         // Add grid-level actions
         $router = $request->getRouter();
         $this->addAction(
             new LinkAction(
-                'addStaticPage',
+                'addBlockPage',
                 new AjaxModal(
-                    $router->url($request, null, null, 'addStaticPage'),
-                    __('plugins.generic.staticPages.addStaticPage'),
+                    $router->url($request, null, null, 'addBlockPage'),
+                    __('plugins.generic.blockPages.addStaticPage'),
                     'modal_add_item'
                 ),
-                __('plugins.generic.staticPages.addStaticPage'),
+                __('plugins.generic.blockPages.addStaticPage'),
                 'add_item'
             )
         );
 
         // Columns
-        $cellProvider = new StaticPageGridCellProvider();
+        $cellProvider = new BlockPageGridCellProvider();
         $this->addColumn(new GridColumn(
             'title',
-            'plugins.generic.staticPages.pageTitle',
+            'plugins.generic.blockPages.pageTitle',
             null,
             'controllers/grid/gridCell.tpl', // Default null not supported in OMP 1.1
             $cellProvider
         ));
         $this->addColumn(new GridColumn(
             'path',
-            'plugins.generic.staticPages.path',
+            'plugins.generic.blockPages.path',
             null,
             'controllers/grid/gridCell.tpl', // Default null not supported in OMP 1.1
             $cellProvider
@@ -122,7 +122,7 @@ class StaticPageGridHandler extends GridHandler
      */
     public function getRowInstance()
     {
-        return new StaticPageGridRow();
+        return new BlockPageGridRow();
     }
 
     //
@@ -137,7 +137,7 @@ class StaticPageGridHandler extends GridHandler
      */
     public function index($args, $request)
     {
-        $form = new Form($this->plugin->getTemplateResource('staticPages.tpl'));
+        $form = new Form($this->plugin->getTemplateResource('blockPages.tpl'));
         return new JSONMessage(true, $form->fetch($request));
     }
 
@@ -147,11 +147,11 @@ class StaticPageGridHandler extends GridHandler
      * @param array $args Arguments to the request
      * @param PKPRequest $request Request object
      */
-    public function addStaticPage($args, $request)
+    public function addBlockPage($args, $request)
     {
         // Calling editStaticPage with an empty ID will add
         // a new static page.
-        return $this->editStaticPage($args, $request);
+        return $this->editBlockPage($args, $request);
     }
 
     /**
@@ -162,14 +162,14 @@ class StaticPageGridHandler extends GridHandler
      *
      * @return JSONMessage Serialized JSON object
      */
-    public function editStaticPage($args, $request)
+    public function editBlockPage($args, $request)
     {
         $staticPageId = $request->getUserVar('staticPageId');
         $context = $request->getContext();
         $this->setupTemplate($request);
 
         // Create and present the edit form
-        $staticPageForm = new StaticPageForm($this->plugin, $context->getId(), $staticPageId);
+        $staticPageForm = new BlockPageForm($this->plugin, $context->getId(), $staticPageId);
         $staticPageForm->initData();
         return new JSONMessage(true, $staticPageForm->fetch($request));
     }
@@ -182,14 +182,14 @@ class StaticPageGridHandler extends GridHandler
      *
      * @return JSONMessage Serialized JSON object
      */
-    public function updateStaticPage($args, $request)
+    public function updateBlockPage($args, $request)
     {
         $staticPageId = $request->getUserVar('staticPageId');
         $context = $request->getContext();
         $this->setupTemplate($request);
 
         // Create and populate the form
-        $staticPageForm = new StaticPageForm($this->plugin, $context->getId(), $staticPageId);
+        $staticPageForm = new BlockPageForm($this->plugin, $context->getId(), $staticPageId);
         $staticPageForm->readInputData();
 
         // Check the results
@@ -219,7 +219,7 @@ class StaticPageGridHandler extends GridHandler
 
         // Delete the static page
         /** @var StaticPagesDAO */
-        $staticPagesDao = DAORegistry::getDAO('StaticPagesDAO');
+        $staticPagesDao = DAORegistry::getDAO('BlockPagesDAO');
         $staticPage = $staticPagesDao->getById($staticPageId, $context->getId());
         $staticPagesDao->deleteObject($staticPage);
 

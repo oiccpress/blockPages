@@ -11,72 +11,72 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "plugins.generic.staticPages.displayName"
-msgstr "Static Pages Plugin"
+msgid "plugins.generic.blockPages.displayName"
+msgstr "Block Pages Plugin"
 
-msgid "plugins.generic.staticPages.description"
-msgstr "This plugin allows Static Content Management."
+msgid "plugins.generic.blockPages.description"
+msgstr "This plugin allows Block Content Management."
 
-msgid "plugins.generic.staticPages.staticPages"
-msgstr "Static Pages"
+msgid "plugins.generic.blockPages.blockPages"
+msgstr "Block Pages"
 
-msgid "plugins.generic.staticPages.pageTitle"
+msgid "plugins.generic.blockPages.pageTitle"
 msgstr "Title"
 
-msgid "plugins.generic.staticPages.content"
+msgid "plugins.generic.blockPages.content"
 msgstr "Content"
 
-msgid "plugins.generic.staticPages.path"
+msgid "plugins.generic.blockPages.path"
 msgstr "Path"
 
-msgid "plugins.generic.staticPages.requirement.tinymce"
+msgid "plugins.generic.blockPages.requirement.tinymce"
 msgstr ""
 "<p><strong>The TinyMCE Plugin must be installed and enabled in order to add/"
 "edit content.</strong></p>"
 
-msgid "plugins.generic.staticPages.editAddContent"
+msgid "plugins.generic.blockPages.editAddContent"
 msgstr "Edit/Add Content"
 
-msgid "plugins.generic.staticPages.addStaticPage"
-msgstr "Add Static Page"
+msgid "plugins.generic.blockPages.addBlockPage"
+msgstr "Add Block Page"
 
-msgid "plugins.generic.staticPages.addNewPage"
+msgid "plugins.generic.blockPages.addNewPage"
 msgstr "Add New Page"
 
-msgid "plugins.generic.staticPages.editStaticPage"
-msgstr "Edit Static Page"
+msgid "plugins.generic.blockPages.editBlockPage"
+msgstr "Edit Block Page"
 
-msgid "plugins.generic.staticPages.noneCreated"
-msgstr "No static pages have been created."
+msgid "plugins.generic.blockPages.noneCreated"
+msgstr "No Block pages have been created."
 
-msgid "plugins.generic.staticPages.settingInstructions"
+msgid "plugins.generic.blockPages.settingInstructions"
 msgstr ""
-"The form below shows you all the static pages you have created.  You can "
+"The form below shows you all the Block pages you have created.  You can "
 "edit or delete the pages using the links on the right-hand side."
 
-msgid "plugins.generic.staticPages.editInstructions"
+msgid "plugins.generic.blockPages.editInstructions"
 msgstr "Use the form below to add/edit page content."
 
-msgid "plugins.generic.staticPages.pathRegEx"
+msgid "plugins.generic.blockPages.pathRegEx"
 msgstr ""
 "The path field must contain only alphanumeric characters plus '.', '/', '-', "
 "and '_'."
 
-msgid "plugins.generic.staticPages.viewInstructions"
+msgid "plugins.generic.blockPages.viewInstructions"
 msgstr ""
 "<p>This page will be accessible at: <blockquote>{$pagesPath}</blockquote>..."
 "where %PATH% is the path entered above. <strong>Note:</strong> No two pages "
 "can have the same path. Using paths that are built into the system may cause "
 "you to lose access to important functions.</p>"
 
-msgid "plugins.generic.staticPages.duplicatePath"
-msgstr "This path already exists for another static page."
+msgid "plugins.generic.blockPages.duplicatePath"
+msgstr "This path already exists for another Block page."
 
-msgid "plugins.generic.staticPages.pageSaved"
+msgid "plugins.generic.blockPages.pageSaved"
 msgstr "Page successfully saved."
 
-msgid "plugins.generic.staticPages.pageDeleted"
+msgid "plugins.generic.blockPages.pageDeleted"
 msgstr "Page successfully deleted."
 
-msgid "plugins.generic.staticPages.noneExist"
+msgid "plugins.generic.blockPages.noneExist"
 msgstr "No pages have been created"

@@ -7,18 +7,18 @@
  * Copyright (c) 2003-2020 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * @package plugins.generic.staticPages
+ * @package plugins.generic.blockPages
  *
- * @class StaticPagesPlugin
+ * @class BlockPagesPlugin
  *
  * @brief Static pages plugin main class
  */
 
-namespace APP\plugins\generic\staticPages;
+namespace APP\plugins\generic\blockPages;
 
 use APP\core\Application;
-use APP\plugins\generic\staticPages\classes\StaticPagesDAO;
-use APP\plugins\generic\staticPages\controllers\grid\StaticPageGridHandler;
+use APP\plugins\generic\blockPages\classes\BlockPagesDAO;
+use APP\plugins\generic\blockPages\controllers\grid\BlockPageGridHandler;
 use APP\template\TemplateManager;
 use PKP\core\Registry;
 use PKP\db\DAORegistry;
@@ -27,14 +27,14 @@ use PKP\linkAction\request\RedirectAction;
 use PKP\plugins\GenericPlugin;
 use PKP\plugins\Hook;
 
-class StaticPagesPlugin extends GenericPlugin
+class BlockPagesPlugin extends GenericPlugin
 {
     /**
      * @copydoc Plugin::getDisplayName()
      */
     public function getDisplayName()
     {
-        return __('plugins.generic.staticPages.displayName');
+        return __('plugins.generic.blockPages.displayName');
     }
 
     /**
@@ -42,10 +42,7 @@ class StaticPagesPlugin extends GenericPlugin
      */
     public function getDescription()
     {
-        $description = __('plugins.generic.staticPages.description');
-        if (!$this->isTinyMCEInstalled()) {
-            $description .= __('plugins.generic.staticPages.requirement.tinymce');
-        }
+        $description = __('plugins.generic.blockPages.description');
         return $description;
     }
 
@@ -70,9 +67,15 @@ class StaticPagesPlugin extends GenericPlugin
     {
         if (parent::register($category, $path, $mainContextId)) {
             if ($this->getEnabled($mainContextId)) {
+
+                if(isset($_GET['__migrate_block_plugin'])) {
+                    $bsm = new BlockPagesSchemaMigration();
+                    $bsm->up();
+                }
+
                 // Register the static pages DAO.
-                $staticPagesDao = new StaticPagesDAO();
-                DAORegistry::registerDAO('StaticPagesDAO', $staticPagesDao);
+                $staticPagesDao = new BlockPagesDAO();
+                DAORegistry::registerDAO('BlockPagesDAO', $staticPagesDao);
 
                 Hook::add('Template::Settings::website', [$this, 'callbackShowWebsiteSettingsTabs']);
 
@@ -128,7 +131,7 @@ class StaticPagesPlugin extends GenericPlugin
         $handler = & $args[3];
 
         /** @var StaticPagesDAO */
-        $staticPagesDao = DAORegistry::getDAO('StaticPagesDAO');
+        $staticPagesDao = DAORegistry::getDAO('BlockPagesDAO');
         if ($page == 'pages' && $op == 'preview') {
             // This is a preview request; mock up a static page to display.
             // The handler class ensures that only managers and administrators
@@ -161,7 +164,7 @@ class StaticPagesPlugin extends GenericPlugin
             $op = 'view';
 
             // It is -- attach the static pages handler.
-            $handler = new StaticPagesHandler($this, $staticPage);
+            $handler = new BlockPagesHandler($this, $staticPage);
             return true;
         }
         return false;
@@ -176,9 +179,9 @@ class StaticPagesPlugin extends GenericPlugin
     {
         $component = & $params[0];
         $componentInstance = & $params[2];
-        if ($component == 'plugins.generic.staticPages.controllers.grid.StaticPageGridHandler') {
+        if ($component == 'plugins.generic.blockPages.controllers.grid.BlockPageGridHandler') {
             // Allow the static page grid handler to get the plugin object
-            $componentInstance = new StaticPageGridHandler($this);
+            $componentInstance = new BlockPageGridHandler($this);
             return true;
         }
         return false;
@@ -202,9 +205,9 @@ class StaticPagesPlugin extends GenericPlugin
                         'settings',
                         'website',
                         ['uid' => uniqid()], // Force reload
-                        'staticPages' // Anchor for tab
+                        'blockPages' // Anchor for tab
                     )),
-                    __('plugins.generic.staticPages.editAddContent'),
+                    __('plugins.generic.blockPages.editAddContent'),
                     null
                 ),
             ] : [],
@@ -217,7 +220,7 @@ class StaticPagesPlugin extends GenericPlugin
      */
     public function getInstallMigration()
     {
-        return new StaticPagesSchemaMigration();
+        return new BlockPagesSchemaMigration();
     }
 
     /**
@@ -230,5 +233,5 @@ class StaticPagesPlugin extends GenericPlugin
 }
 
 if (!PKP_STRICT_MODE) {
-    class_alias('\APP\plugins\generic\staticPages\StaticPagesPlugin', '\StaticPagesPlugin');
+    class_alias('\APP\plugins\generic\blockPages\BlockPagesPlugin', '\BlockPagesPlugin');
 }

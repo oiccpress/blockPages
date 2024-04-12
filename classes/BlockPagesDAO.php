@@ -14,12 +14,12 @@
  * @brief Operations for retrieving and modifying StaticPages objects.
  */
 
-namespace APP\plugins\generic\staticPages\classes;
+namespace APP\plugins\generic\blockPages\classes;
 
 use PKP\db\DAOResultFactory;
 use PKP\db\DBResultRange;
 
-class StaticPagesDAO extends \PKP\db\DAO
+class BlockPagesDAO extends \PKP\db\DAO
 {
     /**
      * Get a static page by ID
@@ -35,7 +35,7 @@ class StaticPagesDAO extends \PKP\db\DAO
         }
 
         $result = $this->retrieve(
-            'SELECT * FROM static_pages WHERE static_page_id = ?'
+            'SELECT * FROM block_pages WHERE block_page_id = ?'
             . ($contextId ? ' AND context_id = ?' : ''),
             $params
         );
@@ -54,7 +54,7 @@ class StaticPagesDAO extends \PKP\db\DAO
     public function getByContextId($contextId, $rangeInfo = null)
     {
         $result = $this->retrieveRange(
-            'SELECT * FROM static_pages WHERE context_id = ?',
+            'SELECT * FROM block_pages WHERE context_id = ?',
             [(int) $contextId],
             $rangeInfo
         );
@@ -67,12 +67,12 @@ class StaticPagesDAO extends \PKP\db\DAO
      * @param int $contextId Context ID
      * @param string $path Path
      *
-     * @return StaticPage
+     * @return BlockPage
      */
     public function getByPath($contextId, $path)
     {
         $result = $this->retrieve(
-            'SELECT * FROM static_pages WHERE context_id = ? AND path = ?',
+            'SELECT * FROM block_pages WHERE context_id = ? AND path = ?',
             [(int) $contextId, $path]
         );
         $row = $result->current();
@@ -82,14 +82,14 @@ class StaticPagesDAO extends \PKP\db\DAO
     /**
      * Insert a static page.
      *
-     * @param StaticPage $staticPage
+     * @param BlockPage $staticPage
      *
      * @return int Inserted static page ID
      */
     public function insertObject($staticPage)
     {
         $this->update(
-            'INSERT INTO static_pages (context_id, path) VALUES (?, ?)',
+            'INSERT INTO block_pages (context_id, path) VALUES (?, ?)',
             [(int) $staticPage->getContextId(), $staticPage->getPath()]
         );
 
@@ -102,15 +102,15 @@ class StaticPagesDAO extends \PKP\db\DAO
     /**
      * Update the database with a static page object
      *
-     * @param StaticPage $staticPage
+     * @param BlockPage $staticPage
      */
     public function updateObject($staticPage)
     {
         $this->update(
-            'UPDATE	static_pages
+            'UPDATE	block_pages
 			SET	context_id = ?,
 				path = ?
-			WHERE	static_page_id = ?',
+			WHERE	block_page_id = ?',
             [
                 (int) $staticPage->getContextId(),
                 $staticPage->getPath(),
@@ -128,7 +128,7 @@ class StaticPagesDAO extends \PKP\db\DAO
     public function deleteById($staticPageId)
     {
         $this->update(
-            'DELETE FROM static_pages WHERE static_page_id = ?',
+            'DELETE FROM block_pages WHERE block_page_id = ?',
             [(int) $staticPageId]
         );
     }
@@ -136,7 +136,7 @@ class StaticPagesDAO extends \PKP\db\DAO
     /**
      * Delete a static page object.
      *
-     * @param StaticPage $staticPage
+     * @param BlockPage $staticPage
      */
     public function deleteObject($staticPage)
     {
@@ -146,26 +146,26 @@ class StaticPagesDAO extends \PKP\db\DAO
     /**
      * Generate a new static page object.
      *
-     * @return StaticPage
+     * @return BlockPage
      */
     public function newDataObject()
     {
-        return new StaticPage();
+        return new BlockPage();
     }
 
     /**
      * Return a new static pages object from a given row.
      *
-     * @return StaticPage
+     * @return BlockPage
      */
     public function _fromRow($row)
     {
         $staticPage = $this->newDataObject();
-        $staticPage->setId($row['static_page_id']);
+        $staticPage->setId($row['block_page_id']);
         $staticPage->setPath($row['path']);
         $staticPage->setContextId($row['context_id']);
 
-        $this->getDataObjectSettings('static_page_settings', 'static_page_id', $row['static_page_id'], $staticPage);
+        $this->getDataObjectSettings('block_page_settings', 'block_page_id', $row['block_page_id'], $staticPage);
         return $staticPage;
     }
 
@@ -185,9 +185,9 @@ class StaticPagesDAO extends \PKP\db\DAO
     public function updateLocaleFields(&$staticPage)
     {
         $this->updateDataObjectSettings(
-            'static_page_settings',
+            'block_page_settings',
             $staticPage,
-            ['static_page_id' => $staticPage->getId()]
+            ['block_page_id' => $staticPage->getId()]
         );
     }
 }

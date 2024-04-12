@@ -7,7 +7,7 @@
  *
  * Static pages plugin -- displays the StaticPagesGrid.
  *}
-<tab id="staticPages" label="{translate key="plugins.generic.staticPages.staticPages"}">
-	{capture assign=staticPageGridUrl}{url router=\PKP\core\PKPApplication::ROUTE_COMPONENT component="plugins.generic.staticPages.controllers.grid.StaticPageGridHandler" op="fetchGrid" escape=false}{/capture}
-	{load_url_in_div id="staticPageGridContainer" url=$staticPageGridUrl}
+<tab id="blockPages" label="{translate key="plugins.generic.blockPages.blockPages"}">
+	{capture assign=staticPageGridUrl}{url router=\PKP\core\PKPApplication::ROUTE_COMPONENT component="plugins.generic.blockPages.controllers.grid.BlockPageGridHandler" op="fetchGrid" escape=false}{/capture}
+	{load_url_in_div id="blockPageGridContainer" url=$staticPageGridUrl}
 </tab>

@@ -1,17 +1,18 @@
 ```
 ===============================================
-=== PKP Static Pages Plugin
+=== OJS Block Pages Plugin
 === Version: (see version.xml)
-=== Author: Juan Pablo Alperin <pkp@alperin.ca>
+=== Author: Joe Simpson, forked from the work by Juan Pablo Alperin <pkp@alperin.ca>
 ===============================================
 ```
 
 ## About
 
-This plugin is intended to provide very simple content management. It allows
-for the creation of static content pages with the assistance of an HTML editor.
+This plugin is intended to provide block level content management. It allows
+for the creation of static content pages with the assistance of an block editor.
 
-[![Build Status](https://travis-ci.org/pkp/staticPages.svg?branch=main)](https://travis-ci.org/pkp/staticPages)
+This is a fork of the PKP's static pages plugin whereby the system has been updated
+to provide for a block editing experience instead of simply HTML.
 
 ## License
 

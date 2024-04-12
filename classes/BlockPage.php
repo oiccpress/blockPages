@@ -14,9 +14,9 @@
  * @brief Data object representing a static page.
  */
 
-namespace APP\plugins\generic\staticPages\classes;
+namespace APP\plugins\generic\blockPages\classes;
 
-class StaticPage extends \PKP\core\DataObject
+class BlockPage extends \PKP\core\DataObject
 {
     //
     // Get/set methods
