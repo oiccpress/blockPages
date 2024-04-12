@@ -14,14 +14,14 @@
  * @brief Handle custom blocks grid row requests.
  */
 
-namespace APP\plugins\generic\staticPages\controllers\grid;
+namespace APP\plugins\generic\blockPages\controllers\grid;
 
 use PKP\controllers\grid\GridRow;
 use PKP\linkAction\LinkAction;
 use PKP\linkAction\request\AjaxModal;
 use PKP\linkAction\request\RemoteActionConfirmationModal;
 
-class StaticPageGridRow extends GridRow
+class BlockPageGridRow extends GridRow
 {
     //
     // Overridden template methods
@@ -42,9 +42,9 @@ class StaticPageGridRow extends GridRow
             // Create the "edit static page" action
             $this->addAction(
                 new LinkAction(
-                    'editStaticPage',
+                    'editBlockPage',
                     new AjaxModal(
-                        $router->url($request, null, null, 'editStaticPage', null, ['staticPageId' => $staticPageId]),
+                        $router->url($request, null, null, 'editBlockPage', null, ['blockPageId' => $staticPageId]),
                         __('grid.action.edit'),
                         'modal_edit',
                         true
@@ -62,7 +62,7 @@ class StaticPageGridRow extends GridRow
                         $request->getSession(),
                         __('common.confirmDelete'),
                         __('grid.action.delete'),
-                        $router->url($request, null, null, 'delete', null, ['staticPageId' => $staticPageId]),
+                        $router->url($request, null, null, 'delete', null, ['blockPageId' => $staticPageId]),
                         'modal_delete'
                     ),
                     __('grid.action.delete'),

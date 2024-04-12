@@ -16,6 +16,7 @@
 
 namespace APP\plugins\generic\blockPages\controllers\grid\form;
 
+use APP\core\Application;
 use APP\plugins\generic\blockPages\classes\BlockPagesDAO;
 use APP\plugins\generic\blockPages\BlockPagesPlugin;
 use APP\template\TemplateManager;
@@ -93,9 +94,11 @@ class BlockPageForm extends \PKP\form\Form
     public function fetch($request, $template = null, $display = false)
     {
         $templateMgr = TemplateManager::getManager();
+        $context = $request->getContext();
         $templateMgr->assign([
-            'staticPageId' => $this->staticPageId,
+            'blockPageId' => $this->staticPageId,
             'pluginJavaScriptURL' => $this->plugin->getJavaScriptURL($request),
+            'uploadUrl' => $request->getDispatcher()->url($request, Application::ROUTE_API, $context->getPath(), '_uploadPublicFile'),
         ]);
 
         if ($context = $request->getContext()) {

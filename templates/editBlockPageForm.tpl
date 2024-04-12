@@ -1,5 +1,5 @@
 {**
- * templates/editStaticPageForm.tpl
+ * templates/editblockPageForm.tpl
  *
  * Copyright (c) 2014-2020 Simon Fraser University
  * Copyright (c) 2003-2020 John Willinsky
@@ -7,40 +7,41 @@
  *
  * Form for editing a static page
  *}
-<script src="{$pluginJavaScriptURL}/BlockPageFormHandler.js"></script>
+<script src="{$pluginJavaScriptURL}/main.js"></script>
 <script>
 	$(function() {ldelim}
 		// Attach the form handler.
-		$('#staticPageForm').pkpHandler(
-			'$.pkp.controllers.form.staticPages.StaticPageFormHandler',
+		$('#blockPageForm').pkpHandler(
+			'$.pkp.controllers.form.blockPages.BlockPageFormHandler',
 			{ldelim}
-				previewUrl: {url|json_encode router=\PKP\core\PKPApplication::ROUTE_PAGE page="pages" op="preview"}
+				previewUrl: {url|json_encode router=\PKP\core\PKPApplication::ROUTE_PAGE page="pages" op="preview"},
+				uploadUrl: {$uploadUrl|json_encode}
 			{rdelim}
 		);
 	{rdelim});
 </script>
 
-{capture assign=actionUrl}{url router=\PKP\core\PKPApplication::ROUTE_COMPONENT component="plugins.generic.staticPages.controllers.grid.StaticPageGridHandler" op="updateStaticPage" existingPageName=$blockName escape=false}{/capture}
-<form class="pkp_form" id="staticPageForm" method="post" action="{$actionUrl}">
+{capture assign=actionUrl}{url router=\PKP\core\PKPApplication::ROUTE_COMPONENT component="plugins.generic.blockPages.controllers.grid.BlockPageGridHandler" op="updateBlockPage" existingPageName=$blockName escape=false}{/capture}
+<form class="pkp_form" id="blockPageForm" method="post" action="{$actionUrl}">
 	{csrf}
-	{if $staticPageId}
-		<input type="hidden" name="staticPageId" value="{$staticPageId|escape}" />
+	{if $blockPageId}
+		<input type="hidden" name="blockPageId" value="{$blockPageId|escape}" />
 	{/if}
-	{fbvFormArea id="staticPagesFormArea" class="border"}
+	{fbvFormArea id="blockPagesFormArea" class="border"}
 		{fbvFormSection}
-			{fbvElement type="text" label="plugins.generic.staticPages.path" id="path" value=$path maxlength="40" inline=true size=$fbvStyles.size.MEDIUM}
-			{fbvElement type="text" label="plugins.generic.staticPages.pageTitle" id="title" value=$title maxlength="255" inline=true multilingual=true size=$fbvStyles.size.MEDIUM}
+			{fbvElement type="text" label="plugins.generic.blockPages.path" id="path" value=$path maxlength="40" inline=true size=$fbvStyles.size.MEDIUM}
+			{fbvElement type="text" label="plugins.generic.blockPages.pageTitle" id="title" value=$title maxlength="255" inline=true size=$fbvStyles.size.MEDIUM}
 		{/fbvFormSection}
 		{fbvFormSection}
 			{capture assign="exampleUrl"}{url|replace:"REPLACEME":"%PATH%" router=\PKP\core\PKPApplication::ROUTE_PAGE context=$currentContext->getPath() page="REPLACEME"}{/capture}
-			{translate key="plugins.generic.staticPages.viewInstructions" pagesPath=$exampleUrl}
+			{translate key="plugins.generic.blockPages.viewInstructions" pagesPath=$exampleUrl}
 		{/fbvFormSection}
-		{fbvFormSection label="plugins.generic.staticPages.content" for="content"}
-			{fbvElement type="textarea" multilingual=true name="content" id="content" value=$content rich=true height=$fbvStyles.height.TALL variables=$allowedVariables}
+		{fbvFormSection label="plugins.generic.blockPages.content" for="content"}
+			<div id="editorjs"></div>
+			<input type="hidden" name="content" id="content" value="{$content|escape}" />
 		{/fbvFormSection}
 	{/fbvFormArea}
 	{fbvFormSection class="formButtons"}
-		{fbvElement type="button" class="pkp_helpers_align_left" id="previewButton" label="common.preview"}
 		{assign var=buttonId value="submitFormButton"|concat:"-"|uniqid}
 		{fbvElement type="submit" class="submitFormButton" id=$buttonId label="common.save"}
 	{/fbvFormSection}

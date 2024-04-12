@@ -88,10 +88,10 @@ class BlockPageGridHandler extends GridHandler
                 'addBlockPage',
                 new AjaxModal(
                     $router->url($request, null, null, 'addBlockPage'),
-                    __('plugins.generic.blockPages.addStaticPage'),
+                    __('plugins.generic.blockPages.addBlockPage'),
                     'modal_add_item'
                 ),
-                __('plugins.generic.blockPages.addStaticPage'),
+                __('plugins.generic.blockPages.addBlockPage'),
                 'add_item'
             )
         );
@@ -164,7 +164,7 @@ class BlockPageGridHandler extends GridHandler
      */
     public function editBlockPage($args, $request)
     {
-        $staticPageId = $request->getUserVar('staticPageId');
+        $staticPageId = $request->getUserVar('blockPageId');
         $context = $request->getContext();
         $this->setupTemplate($request);
 
@@ -184,7 +184,7 @@ class BlockPageGridHandler extends GridHandler
      */
     public function updateBlockPage($args, $request)
     {
-        $staticPageId = $request->getUserVar('staticPageId');
+        $staticPageId = $request->getUserVar('blockPageId');
         $context = $request->getContext();
         $this->setupTemplate($request);
 
@@ -214,7 +214,7 @@ class BlockPageGridHandler extends GridHandler
     {
         if (!$request->checkCSRF()) return new JSONMessage(false);
 
-        $staticPageId = $request->getUserVar('staticPageId');
+        $staticPageId = $request->getUserVar('blockPageId');
         $context = $request->getContext();
 
         // Delete the static page

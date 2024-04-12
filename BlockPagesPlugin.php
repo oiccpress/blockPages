@@ -47,18 +47,6 @@ class BlockPagesPlugin extends GenericPlugin
     }
 
     /**
-     * Check whether or not the TinyMCE plugin is installed.
-     *
-     * @return bool True iff TinyMCE is installed.
-     */
-    public function isTinyMCEInstalled()
-    {
-        $application = Application::get();
-        $products = $application->getEnabledProducts('plugins.generic');
-        return (isset($products['tinymce']));
-    }
-
-    /**
      * @copydoc Plugin::register()
      *
      * @param null|mixed $mainContextId
