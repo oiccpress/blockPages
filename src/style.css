@@ -1,0 +1,58 @@
+.blockPages-block-element {
+    border: 1px solid #002c40;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+}
+.blockPages-block-title {
+    grid-column: span 12;
+    background-color: #002c40;
+    color: #fff;
+    padding: 4px;
+}
+
+.blockPages-block-imagePreview {
+    aspect-ratio: 1/1;
+    width: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+.blockPages-block-item {
+    padding: 4px;
+}
+.blockPages-block-item.col-12 {
+    grid-column: span 12;
+}
+.blockPages-block-item.col-11 {
+    grid-column: span 11;
+}
+.blockPages-block-item.col-10 {
+    grid-column: span 10;
+}
+.blockPages-block-item.col-9 {
+    grid-column: span 9;
+}
+.blockPages-block-item.col-8 {
+    grid-column: span 8;
+}
+.blockPages-block-item.col-7 {
+    grid-column: span 7;
+}
+.blockPages-block-item.col-6 {
+    grid-column: span 6;
+}
+.blockPages-block-item.col-5 {
+    grid-column: span 5;
+}
+.blockPages-block-item.col-4 {
+    grid-column: span 4;
+}
+.blockPages-block-item.col-3 {
+    grid-column: span 3;
+}
+.blockPages-block-item.col-2 {
+    grid-column: span 2;
+}
+.blockPages-block-item.col-1 {
+    grid-column: span 1;
+}

@@ -21,6 +21,7 @@ use APP\plugins\generic\blockPages\classes\BlockPagesDAO;
 use APP\plugins\generic\blockPages\BlockPagesPlugin;
 use APP\template\TemplateManager;
 use PKP\db\DAORegistry;
+use PKP\plugins\Hook;
 
 class BlockPageForm extends \PKP\form\Form
 {
@@ -95,21 +96,16 @@ class BlockPageForm extends \PKP\form\Form
     {
         $templateMgr = TemplateManager::getManager();
         $context = $request->getContext();
+
+        $blocks = [];
+        Hook::call('BlockPages::blocks', [ &$blocks ]);
+
         $templateMgr->assign([
             'blockPageId' => $this->staticPageId,
             'pluginJavaScriptURL' => $this->plugin->getJavaScriptURL($request),
             'uploadUrl' => $request->getDispatcher()->url($request, Application::ROUTE_API, $context->getPath(), '_uploadPublicFile'),
+            'blockConfigs' => $blocks,
         ]);
-
-        if ($context = $request->getContext()) {
-            $templateMgr->assign('allowedVariables', [
-                'contactName' => __('plugins.generic.tinymce.variables.principalContactName', ['value' => $context->getData('contactName')]),
-                'contactEmail' => __('plugins.generic.tinymce.variables.principalContactEmail', ['value' => $context->getData('contactEmail')]),
-                'supportName' => __('plugins.generic.tinymce.variables.supportContactName', ['value' => $context->getData('supportName')]),
-                'supportPhone' => __('plugins.generic.tinymce.variables.supportContactPhone', ['value' => $context->getData('supportPhone')]),
-                'supportEmail' => __('plugins.generic.tinymce.variables.supportContactEmail', ['value' => $context->getData('supportEmail')]),
-            ]);
-        }
 
         return parent::fetch($request, $template, $display);
     }

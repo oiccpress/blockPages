@@ -2,6 +2,7 @@ import EditorJS from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import ImageTool from '@editorjs/image';
 import ajax from '@codexteam/ajax';
+import './style.css';
 
 (function($) {
 
@@ -22,6 +23,140 @@ import ajax from '@codexteam/ajax';
 
         const uploadUrl = options.uploadUrl;
 
+        let editorTools = {
+            header: Header,
+            image: {
+                class: ImageTool,
+                config: {
+                    uploader: {
+                        uploadByFile(file){
+                            const formData = new FormData();
+
+                            formData.append('file', file);
+                            console.log(uploadUrl);
+
+                            return ajax.post({
+                                url: uploadUrl,
+                                data: formData,
+                                type: ajax.contentType.JSON,
+                                headers: {
+                                    'X-Csrf-Token': $("input[name=csrfToken]").val(),
+                                },
+                            }).then(response => {
+                                return {
+                                    success: 1,
+                                    file: {
+                                        url: response.body.url
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        };
+
+        // We dynamically create blocks here based on the provided configuration from
+        // other plugins etc
+        for(let blockConfigKey in options.blockConfigs) {
+            let blockConfig = options.blockConfigs[blockConfigKey];
+            let block = function({data}){ this.data = data; };
+
+            block.prototype.render = function() {
+                let container = document.createElement('div');
+                container.classList.add('row', 'blockPages-block-element');
+
+                let titleBar = document.createElement('div');
+                titleBar.innerText = blockConfig['title'] ?? 'No Title Provided';
+                titleBar.classList.add('col-12', 'blockPages-block-title');
+                container.appendChild(titleBar);
+
+                for(let fieldName in blockConfig['fields']) {
+                    let field = blockConfig['fields'][fieldName];
+                    let fieldContainer = document.createElement('div');
+                    fieldContainer.classList.add('blockPages-block-item', 'col-' + (field['columns'] ?? 12));
+
+                    let fieldRand = Math.random();
+
+                    let label = document.createElement('label');
+                    label.innerText = field['title'];
+                    label.setAttribute('for', 'field_' + fieldRand);
+                    fieldContainer.appendChild(label);
+
+                    // TODO: somehow allow extensions here?
+                    if(field['type'] == 'image') {
+                        field['otype'] = 'image';
+                        field['type'] = 'hidden'; // actual input is hidden please!
+                    }
+
+                    let input = document.createElement('input');
+                    input.setAttribute('type', field['type']);
+                    input.classList.add('cdx-input','bpi-' + fieldName);
+                    input.setAttribute('id', 'field_' + fieldRand);
+                    if(this.data[fieldName]) {
+                        input.value = this.data[fieldName];
+                    }
+                    fieldContainer.appendChild(input);
+
+                    if(field['otype'] == 'image') {
+                        // Image custom handling code
+                        let preview = document.createElement('img');
+                        preview.classList.add('blockPages-block-imagePreview');
+                        if(this.data[fieldName]) {
+                            preview.setAttribute('src', this.data[fieldName]);
+                        }
+                        fieldContainer.appendChild(preview);
+
+                        let upload = document.createElement('input');
+                        upload.setAttribute('type', 'file');
+                        upload.addEventListener('change', function(event){
+                            upload.setAttribute('disabled', 'disabled');
+                            const formData = new FormData();
+                            formData.append('file', event.target.files[0]);
+                            console.log(uploadUrl);
+
+                            return ajax.post({
+                                url: uploadUrl,
+                                data: formData,
+                                type: ajax.contentType.JSON,
+                                headers: {
+                                    'X-Csrf-Token': $("input[name=csrfToken]").val(),
+                                },
+                            }).then(response => {
+                                let url = response.body.url;
+                                preview.setAttribute('src', url);
+                                upload.removeAttribute('disabled');
+                                input.value = url;
+                            });
+                        });
+                        fieldContainer.appendChild(upload);
+                    }
+
+                    container.appendChild(fieldContainer);
+                }
+
+                return container;
+            };
+
+            block.prototype.save = function(blockContent){
+                let data = {};
+                for(let fieldName in blockConfig['fields']) {
+                    let input = blockContent.getElementsByClassName('bpi-' + fieldName);
+                    data[fieldName] = input[0].value;
+                }
+                console.log(data);
+                return data;
+            };
+
+            block.toolbox = function() {
+                return {
+                    title: blockConfig['title'] ?? 'No Title Provided',
+                    icon: blockConfig['icon'] ?? `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Pro 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2024 Fonticons, Inc.--><path d="M342.4 80H248v80H388.4L357 89.5c-2.6-5.8-8.3-9.5-14.6-9.5zM400 208H48V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V208zM59.6 160H200V80H105.6c-6.3 0-12.1 3.7-14.6 9.5L59.6 160zM342.4 32c25.3 0 48.2 14.9 58.5 38l41.6 93.6c3.6 8.2 5.5 17 5.5 26V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V189.6c0-9 1.9-17.8 5.5-26L47.1 70c10.3-23.1 33.2-38 58.5-38H342.4z"/></svg>`
+                }
+            }
+            editorTools[blockConfigKey] = block;
+        }
+
         this.editor = new EditorJS({ 
             /** 
              * Id of Element that should contain the Editor 
@@ -29,38 +164,7 @@ import ajax from '@codexteam/ajax';
             holder: 'editorjs',
             data: JSON.parse($("#content").val()) || {},
             inlineToolbar: ['link', 'bold', 'italic'], 
-            tools: {
-                header: Header,
-                image: {
-                    class: ImageTool,
-                    config: {
-                        uploader: {
-                            uploadByFile(file){
-                                const formData = new FormData();
-
-                                formData.append('file', file);
-                                console.log(uploadUrl);
-
-                                return ajax.post({
-                                    url: uploadUrl,
-                                    data: formData,
-                                    type: ajax.contentType.JSON,
-                                    headers: {
-                                        'X-Csrf-Token': $("input[name=csrfToken]").val(),
-                                    },
-                                }).then(response => {
-                                    return {
-                                        success: 1,
-                                        file: {
-                                            url: response.body.url
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    }
-                }
-            }
+            tools: editorTools
         });
 
         this.parent($formElement, options);

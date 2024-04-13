@@ -24,6 +24,17 @@ COPYING for the complete terms of this license.
 This plugin is compatible with OJS, OMP, and OPS. A compatible version ships
 with each application.
 
+## Installation
+
+You will need to run webpack from the package.json commands to build the javascript.
+
+To do this with a place you have NodeJS installed:
+
+```
+npm install
+npm run build
+```
+
 ## Management
 
 New pages can be added/edited/deleted through the Plugin Management interface.

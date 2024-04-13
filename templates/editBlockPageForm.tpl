@@ -15,7 +15,8 @@
 			'$.pkp.controllers.form.blockPages.BlockPageFormHandler',
 			{ldelim}
 				previewUrl: {url|json_encode router=\PKP\core\PKPApplication::ROUTE_PAGE page="pages" op="preview"},
-				uploadUrl: {$uploadUrl|json_encode}
+				uploadUrl: {$uploadUrl|json_encode},
+				blockConfigs: {$blockConfigs|json_encode}
 			{rdelim}
 		);
 	{rdelim});

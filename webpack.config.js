@@ -43,5 +43,13 @@ module.exports = {
   plugins: [
       new Webpack5RemoveUseStrictPlugin()
   ],
+  module: {
+    rules: [
+        {
+            test: /\.css$/,
+            use: ['style-loader', 'css-loader'],
+        },
+    ]
+  },
   mode: "development"
 };
