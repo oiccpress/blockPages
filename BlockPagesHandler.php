@@ -21,6 +21,7 @@ use APP\plugins\generic\blockPages\classes\BlockPage;
 use APP\template\TemplateManager;
 use PKP\core\PKPRequest;
 use PKP\security\Role;
+use PKP\template\PKPTemplateResource;
 
 class BlockPagesHandler extends \APP\handler\Handler
 {
@@ -69,17 +70,10 @@ class BlockPagesHandler extends \APP\handler\Handler
         $this->setupTemplate($request);
         $templateMgr->assign('title', $this->staticPage->getLocalizedTitle());
 
-        $vars = [];
-        if ($context) {
-            $vars = [
-                '{$contactName}' => $context->getData('contactName'),
-                '{$contactEmail}' => $context->getData('contactEmail'),
-                '{$supportName}' => $context->getData('supportName'),
-                '{$supportPhone}' => $context->getData('supportPhone'),
-                '{$supportEmail}' => $context->getData('supportEmail'),
-            ];
-        }
-        $templateMgr->assign('content', strtr($this->staticPage->getLocalizedContent(), $vars));
+        $templateMgr->assign('content', json_decode($this->staticPage->getLocalizedContent(), true));
+
+        $templateMgr->registerResource('blocks', new PKPTemplateResource([
+            $this->plugin->getPluginPath() . '/templates/', 'templates', 'lib/pkp/templates']));
 
         $templateMgr->display($this->plugin->getTemplateResource('content.tpl'));
     }

@@ -9,9 +9,16 @@
  *}
 {include file="frontend/components/header.tpl" pageTitleTranslated=$title}
 
-<div class="page">
+<div class="blockPage-container">
+<div class="page container py-5 py-lg-6">
 	<h2>{$title|escape}</h2>
-	{$content}
+	<div class="blockPage-content">
+		{foreach from=$content['blocks'] item=item}
+			{capture assign=file}blocks:blockPages/{$item['type']}.tpl{/capture}
+			{include file=$file}
+		{/foreach}
+	</div>
+</div>
 </div>
 
 {include file="frontend/components/footer.tpl"}
