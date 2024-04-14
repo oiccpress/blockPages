@@ -53,11 +53,19 @@ class BlockPagesDAO extends \PKP\db\DAO
      */
     public function getByContextId($contextId, $rangeInfo = null)
     {
-        $result = $this->retrieveRange(
-            'SELECT * FROM block_pages WHERE context_id = ?',
-            [(int) $contextId],
-            $rangeInfo
-        );
+        if($contextId == null) {
+            $result = $this->retrieveRange(
+                'SELECT * FROM block_pages WHERE context_id IS NULL',
+                [],
+                $rangeInfo
+            );
+        } else {
+            $result = $this->retrieveRange(
+                'SELECT * FROM block_pages WHERE context_id = ?',
+                [(int)$contextId],
+                $rangeInfo
+            );
+        }
         return new DAOResultFactory($result, $this, '_fromRow');
     }
 
@@ -71,10 +79,17 @@ class BlockPagesDAO extends \PKP\db\DAO
      */
     public function getByPath($contextId, $path)
     {
-        $result = $this->retrieve(
-            'SELECT * FROM block_pages WHERE context_id = ? AND path = ?',
-            [(int) $contextId, $path]
-        );
+        if($contextId == null) {
+            $result = $this->retrieve(
+                'SELECT * FROM block_pages WHERE context_id IS NULL AND path = ?',
+                [$path]
+            );
+        } else {
+            $result = $this->retrieve(
+                'SELECT * FROM block_pages WHERE context_id = ? AND path = ?',
+                [$contextId, $path]
+            );
+        }
         $row = $result->current();
         return $row ? $this->_fromRow((array) $row) : null;
     }
@@ -90,7 +105,7 @@ class BlockPagesDAO extends \PKP\db\DAO
     {
         $this->update(
             'INSERT INTO block_pages (context_id, path) VALUES (?, ?)',
-            [(int) $staticPage->getContextId(), $staticPage->getPath()]
+            [$staticPage->getContextId(), $staticPage->getPath()]
         );
 
         $staticPage->setId($this->getInsertId());
@@ -112,7 +127,7 @@ class BlockPagesDAO extends \PKP\db\DAO
 				path = ?
 			WHERE	block_page_id = ?',
             [
-                (int) $staticPage->getContextId(),
+                $staticPage->getContextId(),
                 $staticPage->getPath(),
                 (int) $staticPage->getId()
             ]

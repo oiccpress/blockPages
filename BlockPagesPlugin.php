@@ -20,6 +20,7 @@ use APP\core\Application;
 use APP\plugins\generic\blockPages\classes\BlockPagesDAO;
 use APP\plugins\generic\blockPages\controllers\grid\BlockPageGridHandler;
 use APP\template\TemplateManager;
+use Illuminate\Support\Facades\DB;
 use PKP\core\Registry;
 use PKP\db\DAORegistry;
 use PKP\linkAction\LinkAction;
@@ -57,8 +58,10 @@ class BlockPagesPlugin extends GenericPlugin
             if ($this->getEnabled($mainContextId)) {
 
                 if(isset($_GET['__migrate_block_plugin'])) {
+                    DB::beginTransaction();
                     $bsm = new BlockPagesSchemaMigration();
                     $bsm->up();
+                    DB::commit();
                 }
 
                 // Register the static pages DAO.
@@ -66,6 +69,7 @@ class BlockPagesPlugin extends GenericPlugin
                 DAORegistry::registerDAO('BlockPagesDAO', $staticPagesDao);
 
                 Hook::add('Template::Settings::website', [$this, 'callbackShowWebsiteSettingsTabs']);
+                Hook::add('Template::Settings::admin', [$this, 'callbackShowWebsiteSettingsTabs']);
 
                 // Intercept the LoadHandler hook to present
                 // static pages when requested.
@@ -140,7 +144,7 @@ class BlockPagesPlugin extends GenericPlugin
             // Look for a static page with the given path
             $context = $request->getContext();
             $staticPage = $staticPagesDao->getByPath(
-                $context?->getId() ?? Application::CONTEXT_ID_NONE,
+                $context?->getId() ?? null,
                 $path
             );
         }

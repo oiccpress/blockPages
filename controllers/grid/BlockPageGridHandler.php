@@ -16,6 +16,7 @@
 
 namespace APP\plugins\generic\blockPages\controllers\grid;
 
+use APP\core\Application;
 use APP\plugins\generic\blockPages\classes\BlockPagesDAO;
 use APP\plugins\generic\blockPages\controllers\grid\form\BlockPageForm;
 use APP\plugins\generic\blockPages\BlockPagesPlugin;
@@ -29,6 +30,8 @@ use PKP\form\Form;
 use PKP\linkAction\LinkAction;
 use PKP\linkAction\request\AjaxModal;
 use PKP\security\authorization\ContextAccessPolicy;
+use PKP\security\authorization\PolicySet;
+use PKP\security\authorization\RoleBasedHandlerOperationPolicy;
 use PKP\security\Role;
 
 class BlockPageGridHandler extends GridHandler
@@ -43,7 +46,7 @@ class BlockPageGridHandler extends GridHandler
     {
         parent::__construct();
         $this->addRoleAssignment(
-            [Role::ROLE_ID_MANAGER],
+            [Role::ROLE_ID_MANAGER, Role::ROLE_ID_SITE_ADMIN],
             ['index', 'fetchGrid', 'fetchRow', 'addBlockPage', 'editBlockPage', 'updateBlockPage', 'delete']
         );
         $this->plugin = $plugin;
@@ -58,7 +61,14 @@ class BlockPageGridHandler extends GridHandler
      */
     public function authorize($request, &$args, $roleAssignments)
     {
-        $this->addPolicy(new ContextAccessPolicy($request, $roleAssignments));
+        // $this->addPolicy(new ContextAccessPolicy($request, $roleAssignments));
+        $rolePolicy = new PolicySet(PolicySet::COMBINING_PERMIT_OVERRIDES);
+
+        foreach ($roleAssignments as $role => $operations) {
+            $rolePolicy->addPolicy(new RoleBasedHandlerOperationPolicy($request, $role, $operations));
+        }
+        $this->addPolicy($rolePolicy);
+
         return parent::authorize($request, $args, $roleAssignments);
     }
 
@@ -79,7 +89,9 @@ class BlockPageGridHandler extends GridHandler
         // Get the pages and add the data to the grid
         /** @var BlockPagesDAO */
         $staticPagesDao = DAORegistry::getDAO('BlockPagesDAO');
-        $this->setGridDataElements($staticPagesDao->getByContextId($context->getId()));
+        $this->setGridDataElements($staticPagesDao->getByContextId(
+            $context?->getId() ?? null
+        ));
 
         // Add grid-level actions
         $router = $request->getRouter();
@@ -169,7 +181,7 @@ class BlockPageGridHandler extends GridHandler
         $this->setupTemplate($request);
 
         // Create and present the edit form
-        $staticPageForm = new BlockPageForm($this->plugin, $context->getId(), $staticPageId);
+        $staticPageForm = new BlockPageForm($this->plugin, $context?->getId() ?? null, $staticPageId);
         $staticPageForm->initData();
         return new JSONMessage(true, $staticPageForm->fetch($request));
     }
@@ -189,7 +201,7 @@ class BlockPageGridHandler extends GridHandler
         $this->setupTemplate($request);
 
         // Create and populate the form
-        $staticPageForm = new BlockPageForm($this->plugin, $context->getId(), $staticPageId);
+        $staticPageForm = new BlockPageForm($this->plugin, $context?->getId() ?? null, $staticPageId);
         $staticPageForm->readInputData();
 
         // Check the results
@@ -220,7 +232,7 @@ class BlockPageGridHandler extends GridHandler
         // Delete the static page
         /** @var StaticPagesDAO */
         $staticPagesDao = DAORegistry::getDAO('BlockPagesDAO');
-        $staticPage = $staticPagesDao->getById($staticPageId, $context->getId());
+        $staticPage = $staticPagesDao->getById($staticPageId, $context?->getId() ?? null);
         $staticPagesDao->deleteObject($staticPage);
 
         return DAO::getDataChangedEvent();

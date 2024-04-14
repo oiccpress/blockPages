@@ -30,7 +30,7 @@ class BlockPagesSchemaMigration extends Migration
         Schema::create('block_pages', function (Blueprint $table) {
             $table->bigInteger('block_page_id')->autoIncrement();
             $table->string('path', 255);
-            $table->bigInteger('context_id');
+            $table->bigInteger('context_id')->nullable();
             $table->foreign('context_id', 'block_pages_context_id')->references(Application::getContextDAO()->primaryKeyColumn)->on(Application::getContextDAO()->tableName)->onDelete('cascade');
         });
 
@@ -45,7 +45,7 @@ class BlockPagesSchemaMigration extends Migration
             $table->string('setting_name', 255);
             $table->longText('setting_value')->nullable();
             $table->string('setting_type', 6)->comment('(bool|int|float|string|object)');
-            $table->index(['block_page_id'], 'block_page_settings_block_page_id');
+            // $table->index(['block_page_id'], 'block_page_settings_block_page_id');
             $table->unique(['block_page_id', 'locale', 'setting_name'], 'block_page_settings_pkey');
         });
     }

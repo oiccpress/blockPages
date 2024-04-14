@@ -103,7 +103,8 @@ class BlockPageForm extends \PKP\form\Form
         $templateMgr->assign([
             'blockPageId' => $this->staticPageId,
             'pluginJavaScriptURL' => $this->plugin->getJavaScriptURL($request),
-            'uploadUrl' => $request->getDispatcher()->url($request, Application::ROUTE_API, $context->getPath(), '_uploadPublicFile'),
+            'contextPath' => ($context?->getPath() ?? ''),
+            'uploadUrl' => $request->getDispatcher()->url($request, Application::ROUTE_API, $context?->getPath() ?? '', '_uploadPublicFile'),
             'blockConfigs' => $blocks,
         ]);
 
@@ -118,13 +119,19 @@ class BlockPageForm extends \PKP\form\Form
         parent::execute(...$functionParams);
         /** @var BlockPagesDAO */
         $staticPagesDao = DAORegistry::getDAO('BlockPagesDAO');
+
+        $contextId = $this->contextId;
+        if($contextId == 0) {
+            $contextId = null;
+        }
+
         if ($this->staticPageId) {
             // Load and update an existing page
-            $staticPage = $staticPagesDao->getById($this->staticPageId, $this->contextId);
+            $staticPage = $staticPagesDao->getById($this->staticPageId, $contextId);
         } else {
             // Create a new static page
             $staticPage = $staticPagesDao->newDataObject();
-            $staticPage->setContextId($this->contextId);
+            $staticPage->setContextId($contextId);
         }
 
         $staticPage->setPath($this->getData('path'));

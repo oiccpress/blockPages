@@ -34,12 +34,12 @@
 			{fbvElement type="text" label="plugins.generic.blockPages.pageTitle" id="title" value=$title maxlength="255" inline=true size=$fbvStyles.size.MEDIUM}
 		{/fbvFormSection}
 		{fbvFormSection}
-			{capture assign="exampleUrl"}{url|replace:"REPLACEME":"%PATH%" router=\PKP\core\PKPApplication::ROUTE_PAGE context=$currentContext->getPath() page="REPLACEME"}{/capture}
+			{capture assign="exampleUrl"}{url|replace:"REPLACEME":"%PATH%" router=\PKP\core\PKPApplication::ROUTE_PAGE context=$contextPath page="REPLACEME"}{/capture}
 			{translate key="plugins.generic.blockPages.viewInstructions" pagesPath=$exampleUrl}
 		{/fbvFormSection}
 		{fbvFormSection label="plugins.generic.blockPages.content" for="content"}
 			<div id="editorjs"></div>
-			<input type="hidden" name="content" id="content" value="{$content|escape}" />
+			<input type="hidden" name="content" id="content" value="{$content|escape|default:'{}'}" />
 		{/fbvFormSection}
 	{/fbvFormArea}
 	{fbvFormSection class="formButtons"}
