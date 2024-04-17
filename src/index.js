@@ -2,6 +2,7 @@ import EditorJS from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import ImageTool from '@editorjs/image';
 import ajax from '@codexteam/ajax';
+import Table from '@editorjs/table'
 import './style.css';
 
 (function($) {
@@ -25,6 +26,7 @@ import './style.css';
 
         let editorTools = {
             header: Header,
+            table: Table,
             image: {
                 class: ImageTool,
                 config: {

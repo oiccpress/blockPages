@@ -18,6 +18,7 @@
     "@codexteam/ajax": "^4.2.0",
     "@editorjs/editorjs": "^2.29.1",
     "@editorjs/header": "^2.8.1",
-    "@editorjs/image": "^2.9.0"
+    "@editorjs/image": "^2.9.0",
+    "@editorjs/table": "^2.3.0"
   }
 }
