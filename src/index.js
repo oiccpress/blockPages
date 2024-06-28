@@ -5,6 +5,19 @@ import ajax from '@codexteam/ajax';
 import Table from '@editorjs/table'
 import './style.css';
 
+// https://stackoverflow.com/a/61321728/230419
+function DataURIToBlob(dataURI) {
+    const splitDataURI = dataURI.split(',')
+    const byteString = splitDataURI[0].indexOf('base64') >= 0 ? atob(splitDataURI[1]) : decodeURI(splitDataURI[1])
+    const mimeString = splitDataURI[0].split(':')[1].split(';')[0]
+
+    const ia = new Uint8Array(byteString.length)
+    for (let i = 0; i < byteString.length; i++)
+        ia[i] = byteString.charCodeAt(i)
+
+    return new Blob([ia], { type: mimeString })
+}
+
 (function($) {
 
     $.pkp.controllers.form.blockPages =
@@ -73,6 +86,45 @@ import './style.css';
                 titleBar.classList.add('col-12', 'blockPages-block-title');
                 container.appendChild(titleBar);
 
+                let importButton = document.createElement('button');
+                importButton.setAttribute('type', 'button');
+                importButton.innerText = 'Import JSON';
+                importButton.classList.add('blockPages-block-import');
+                importButton.addEventListener('click', function(){
+                    let json = prompt("Import JSON");
+                    json = JSON.parse(json);
+                    for(let fieldName in blockConfig['fields']) {
+                        let field = blockConfig['fields'][fieldName];
+                        let val = json[fieldName];
+                        if(val) {
+                            if(field['otype'] == 'image') { // Maybe switch in future
+                                const file = DataURIToBlob(val);
+                                const formData = new FormData();
+
+                                const splitDataURI = val.split(',');
+                                const mimeString = splitDataURI[0].split(':')[1].split(';')[0];
+                                const ext = mimeString.split("/")[1];
+                                formData.append('file', file, "img." + ext);
+                                ajax.post({
+                                    url: uploadUrl,
+                                    data: formData,
+                                    type: ajax.contentType.JSON,
+                                    headers: {
+                                        'X-Csrf-Token': $("input[name=csrfToken]").val(),
+                                    },
+                                }).then(response => {
+                                    let url = response.body.url;
+                                    $(".bpp-" + fieldName, container).attr( 'src', url);
+                                    $(".bpi-" + fieldName, container).val( url );
+                                });
+                            } else {
+                                $(".bpi-" + fieldName, container).val( val );
+                            }
+                        }
+                    }
+                });
+                titleBar.appendChild(importButton);
+
                 for(let fieldName in blockConfig['fields']) {
                     let field = blockConfig['fields'][fieldName];
                     let fieldContainer = document.createElement('div');
@@ -103,7 +155,7 @@ import './style.css';
                     if(field['otype'] == 'image') {
                         // Image custom handling code
                         let preview = document.createElement('img');
-                        preview.classList.add('blockPages-block-imagePreview');
+                        preview.classList.add('blockPages-block-imagePreview','bpp-' + fieldName);
                         if(this.data[fieldName]) {
                             preview.setAttribute('src', this.data[fieldName]);
                         }
@@ -170,6 +222,9 @@ import './style.css';
         });
 
         this.parent($formElement, options);
+
+        $(".pkpModalWrapper").css("pointer-events", 'none'); // Make it so you can't accidentally dismiss the dialog
+        $(".pkpModalWrapper .pkp_modal_panel").css("pointer-events", 'all'); // but you can interact with the box
 
     };
 

@@ -56,3 +56,7 @@
 .blockPages-block-item.col-1 {
     grid-column: span 1;
 }
+
+.blockPages-block-import {
+    float: right;
+}
