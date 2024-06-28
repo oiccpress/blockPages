@@ -2,7 +2,8 @@ import EditorJS from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import ImageTool from '@editorjs/image';
 import ajax from '@codexteam/ajax';
-import Table from '@editorjs/table'
+import Table from '@editorjs/table';
+import NestedList from '@editorjs/nested-list';
 import './style.css';
 
 // https://stackoverflow.com/a/61321728/230419
@@ -40,6 +41,13 @@ function DataURIToBlob(dataURI) {
         let editorTools = {
             header: Header,
             table: Table,
+            list: {
+                class: NestedList,
+                inlineToolbar: true,
+                config: {
+                    defaultStyle: 'unordered'
+                },
+            },
             image: {
                 class: ImageTool,
                 config: {
