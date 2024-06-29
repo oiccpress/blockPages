@@ -7,7 +7,7 @@
  *
  * Form for editing a static page
  *}
-<script src="{$pluginJavaScriptURL}/main.js?ver=2024-06-28"></script>
+<script src="{$pluginJavaScriptURL}/main.js?ver=2024-06-30"></script>
 <script>
 	$(function() {ldelim}
 		// Attach the form handler.

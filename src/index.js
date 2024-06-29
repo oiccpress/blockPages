@@ -112,6 +112,9 @@ function DataURIToBlob(dataURI) {
                                 const splitDataURI = val.split(',');
                                 const mimeString = splitDataURI[0].split(':')[1].split(';')[0];
                                 const ext = mimeString.split("/")[1];
+                                if(ext == 'jpeg') {
+                                    ext = 'jpg';
+                                }
                                 formData.append('file', file, "img." + ext);
                                 ajax.post({
                                     url: uploadUrl,
