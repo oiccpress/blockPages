@@ -21,12 +21,14 @@ use APP\plugins\generic\blockPages\classes\BlockPagesDAO;
 use APP\plugins\generic\blockPages\controllers\grid\BlockPageGridHandler;
 use APP\template\TemplateManager;
 use Illuminate\Support\Facades\DB;
+use PKP\core\PKPApplication;
 use PKP\core\Registry;
 use PKP\db\DAORegistry;
 use PKP\linkAction\LinkAction;
 use PKP\linkAction\request\RedirectAction;
 use PKP\plugins\GenericPlugin;
 use PKP\plugins\Hook;
+use PKP\template\PKPTemplateResource;
 
 class BlockPagesPlugin extends GenericPlugin
 {

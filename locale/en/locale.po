@@ -37,6 +37,9 @@ msgstr ""
 msgid "plugins.generic.blockPages.editAddContent"
 msgstr "Edit/Add Content"
 
+msgid "plugins.generic.blockPages.blockPage"
+msgstr "Block Page"
+
 msgid "plugins.generic.blockPages.addBlockPage"
 msgstr "Add Block Page"
 
