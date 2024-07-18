@@ -83,3 +83,6 @@ msgstr "Page successfully deleted."
 
 msgid "plugins.generic.blockPages.noneExist"
 msgstr "No pages have been created"
+
+msgid "plugins.generic.blockPages.createNavLink"
+msgstr "Create Navigation Link"

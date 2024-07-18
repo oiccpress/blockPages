@@ -21,6 +21,8 @@ use APP\plugins\generic\blockPages\classes\BlockPagesDAO;
 use APP\plugins\generic\blockPages\BlockPagesPlugin;
 use APP\template\TemplateManager;
 use PKP\db\DAORegistry;
+use PKP\navigationMenu\NavigationMenuItem;
+use PKP\navigationMenu\NavigationMenuItemDAO;
 use PKP\plugins\Hook;
 
 class BlockPageForm extends \PKP\form\Form
@@ -84,7 +86,7 @@ class BlockPageForm extends \PKP\form\Form
      */
     public function readInputData()
     {
-        $this->readUserVars(['path', 'title', 'content']);
+        $this->readUserVars(['path', 'title', 'content', 'create_nav_link']);
     }
 
     /**
@@ -143,5 +145,22 @@ class BlockPageForm extends \PKP\form\Form
         } else {
             $staticPagesDao->insertObject($staticPage);
         }
+
+        if($this->getData('create_nav_link')) {
+            $navMenuItem = new NavigationMenuItem();
+            $navMenuItem->setContextId( $contextId );
+            $navMenuItem->setTitle( $this->getData('title'), "en" );
+            $navMenuItem->setType( NavigationMenuItem::NMI_TYPE_REMOTE_URL );
+            $navMenuItem->setPath("");
+            $navMenuItem->setContent("", "en");
+
+            $request = Application::get()->getRequest();
+            $context = Application::getContextDAO()->getById($contextId);
+            $navMenuItem->setRemoteUrl( $request->getDispatcher()->url($request, Application::ROUTE_PAGE, $context?->getPath() ?? '', $this->getData('path') ), "en" );
+
+            $navigationMenuItemDao = DAORegistry::getDAO('NavigationMenuItemDAO'); /** @var NavigationMenuItemDAO $navigationMenuItemDao */
+            $navigationMenuItemDao->insertObject($navMenuItem);
+        }
+
     }
 }

@@ -32,6 +32,9 @@
 		{fbvFormSection}
 			{fbvElement type="text" label="plugins.generic.blockPages.path" id="path" value=$path maxlength="40" inline=true size=$fbvStyles.size.MEDIUM}
 			{fbvElement type="text" label="plugins.generic.blockPages.pageTitle" id="title" value=$title maxlength="255" inline=true size=$fbvStyles.size.MEDIUM}
+			{if !$blockPageId}
+				{fbvElement type="checkbox" label="plugins.generic.blockPages.createNavLink" id="create_nav_link" inline=true size=$fbvStyles.size.MEDIUM}
+			{/if}
 		{/fbvFormSection}
 		{fbvFormSection}
 			{capture assign="exampleUrl"}{url|replace:"REPLACEME":"%PATH%" router=\PKP\core\PKPApplication::ROUTE_PAGE context=$contextPath page="REPLACEME"}{/capture}
