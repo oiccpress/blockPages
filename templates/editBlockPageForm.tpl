@@ -7,7 +7,7 @@
  *
  * Form for editing a static page
  *}
-<script src="{$pluginJavaScriptURL}/main.js?ver=2024-06-30"></script>
+<script src="{$pluginJavaScriptURL}/main.js?ver=2025-04-20"></script>
 <script>
 	$(function() {ldelim}
 		// Attach the form handler.
@@ -41,6 +41,9 @@
 			{translate key="plugins.generic.blockPages.viewInstructions" pagesPath=$exampleUrl}
 		{/fbvFormSection}
 		{fbvFormSection label="plugins.generic.blockPages.content" for="content"}
+			<button type="button" id="massimport" style="float: right;margin-top:-40px">
+				{translate key="plugins.generic.blockPages.massImport"}
+			</button>
 			<div id="editorjs"></div>
 			<input type="hidden" name="content" id="content" value="{$content|escape|default:'{}'}" />
 		{/fbvFormSection}
