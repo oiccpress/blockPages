@@ -89,3 +89,6 @@ msgstr "Create Navigation Link"
 
 msgid "plugins.generic.blockPages.htmlBlock"
 msgstr "HTML Block"
+
+msgid "plugins.generic.blockPages.massImport"
+msgstr "Import many blocks"

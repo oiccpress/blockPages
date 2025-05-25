@@ -170,9 +170,6 @@ function DataURIToBlob(dataURI) {
                         // Image custom handling code
                         let preview = document.createElement('img');
                         preview.classList.add('blockPages-block-imagePreview','bpp-' + fieldName);
-                        if(this.data[fieldName]) {
-                            preview.setAttribute('src', this.data[fieldName]);
-                        }
                         fieldContainer.appendChild(preview);
 
                         let upload = document.createElement('input');
@@ -198,6 +195,40 @@ function DataURIToBlob(dataURI) {
                             });
                         });
                         fieldContainer.appendChild(upload);
+
+                        if(this.data[fieldName]) {
+                            preview.setAttribute('src', this.data[fieldName]);
+                            if(this.data[fieldName].indexOf('data:') === 0) {
+                                // Upload as part of mass import?
+                                const val = this.data[fieldName];
+                                const file = DataURIToBlob(val);
+                                const formData = new FormData();
+
+                                const splitDataURI = val.split(',');
+                                const mimeString = splitDataURI[0].split(':')[1].split(';')[0];
+                                const ext = mimeString.split("/")[1];
+                                if(ext == 'jpeg') {
+                                    ext = 'jpg';
+                                }
+                                formData.append('file', file, "img." + ext);
+                                upload.setAttribute('disabled', 'disabled');
+                                ajax.post({
+                                    url: uploadUrl,
+                                    data: formData,
+                                    type: ajax.contentType.JSON,
+                                    headers: {
+                                        'X-Csrf-Token': $("input[name=csrfToken]").val(),
+                                    },
+                                }).then(response => {
+                                    let url = response.body.url;
+                                    $(".bpp-" + fieldName, container).attr( 'src', url);
+                                    $(".bpi-" + fieldName, container).val( url );
+                                    upload.removeAttribute('disabled');
+                                });
+
+                            }
+                        }
+
                     }
 
                     container.appendChild(fieldContainer);
@@ -233,6 +264,15 @@ function DataURIToBlob(dataURI) {
             data: JSON.parse($("#content").val()) || {},
             inlineToolbar: ['link', 'bold', 'italic'], 
             tools: editorTools
+        });
+        let self = this;
+
+        $("#massimport").click(function(){
+            let blocks = prompt('JSON array of blocks');
+            blocks = JSON.parse(blocks);
+            for(let blockJ of blocks) {
+                self.editor.blocks.insert(blockJ.type, blockJ.fields);
+            }
         });
 
         this.parent($formElement, options);
