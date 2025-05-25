@@ -86,3 +86,6 @@ msgstr "No pages have been created"
 
 msgid "plugins.generic.blockPages.createNavLink"
 msgstr "Create Navigation Link"
+
+msgid "plugins.generic.blockPages.htmlBlock"
+msgstr "HTML Block"

@@ -155,6 +155,9 @@ function DataURIToBlob(dataURI) {
                     }
 
                     let input = document.createElement('input');
+                    if(field['type'] == 'textarea') {
+                        input = document.createElement('textarea');
+                    }
                     input.setAttribute('type', field['type']);
                     input.classList.add('cdx-input','bpi-' + fieldName);
                     input.setAttribute('id', 'field_' + fieldRand);

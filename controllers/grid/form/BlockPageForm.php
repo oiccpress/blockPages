@@ -99,7 +99,16 @@ class BlockPageForm extends \PKP\form\Form
         $templateMgr = TemplateManager::getManager();
         $context = $request->getContext();
 
-        $blocks = [];
+        $blocks = [
+
+            'html' => [
+                'title' => __('plugins.generic.blockPages.htmlBlock'),
+                'fields' => [
+                    'html' => [ 'type' => 'textarea', 'title' => __('plugins.generic.blockPages.htmlBlock') ],
+                ],
+            ]
+
+        ];
         Hook::call('BlockPages::blocks', [ &$blocks ]);
 
         $templateMgr->assign([

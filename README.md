@@ -45,5 +45,7 @@ http://www.../index.php/pages/view/%PATH%, where %PATH% is a value you choose.
 
 ## Contact/Support
 
-Documentation, bug listings, and updates can be found on this plugin's homepage
-at [https://github.com/pkp/staticPages](https://github.com/pkp/staticPages).
+![OICC Press in Collaboration with Invisible Dragon](https://images.invisibledragonltd.com/oicc-collab.png)
+
+This project is brought to you by [Invisible Dragon](https://invisibledragonltd.com/ojs/) in collaboration with
+[OICC Press](https://oiccpress.com/)
