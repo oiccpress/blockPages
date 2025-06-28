@@ -197,7 +197,7 @@ class BlockPagesPlugin extends GenericPlugin
                         null,
                         'management',
                         'settings',
-                        'website',
+                        ['website'],
                         ['uid' => uniqid()], // Force reload
                         'blockPages' // Anchor for tab
                     )),

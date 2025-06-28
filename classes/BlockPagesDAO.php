@@ -189,7 +189,7 @@ class BlockPagesDAO extends \PKP\db\DAO
      *
      * @return array
      */
-    public function getAdditionalFieldNames()
+    public function getAdditionalFieldNames() : array
     {
         return ['title', 'content'];
     }
