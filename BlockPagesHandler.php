@@ -19,9 +19,11 @@ namespace APP\plugins\generic\blockPages;
 use APP\core\Application;
 use APP\plugins\generic\blockPages\classes\BlockPage;
 use APP\template\TemplateManager;
+use Illuminate\Support\Str;
 use PKP\core\PKPRequest;
 use PKP\security\Role;
 use PKP\template\PKPTemplateResource;
+use Smarty;
 
 class BlockPagesHandler extends \APP\handler\Handler
 {
@@ -67,10 +69,25 @@ class BlockPagesHandler extends \APP\handler\Handler
 
         // Assign the template vars needed and display
         $templateMgr = TemplateManager::getManager($request);
+        $templateMgr->registerPlugin( Smarty::PLUGIN_MODIFIER, 'slugify', [ Str::class, 'slug' ] );
+
+        $content = json_decode($this->staticPage->getLocalizedContent(), true);
+        $toc = [];
+        foreach($content['blocks'] as $item) {
+            if($item['type'] == 'header') {
+                $toc[] = [
+                    $item['data']['level'],
+                    Str::slug( $item['data']['text'] ),
+                    $item['data']['text']
+                ];
+            }
+        }
+        $templateMgr->assign('toc', $toc);
+
         $this->setupTemplate($request);
         $templateMgr->assign('title', $this->staticPage->getLocalizedTitle());
 
-        $templateMgr->assign('content', json_decode($this->staticPage->getLocalizedContent(), true));
+        $templateMgr->assign('content', $content);
 
         $templateMgr->registerResource('blocks', new PKPTemplateResource([
             $this->plugin->getPluginPath() . '/templates/', 'templates', 'lib/pkp/templates']));

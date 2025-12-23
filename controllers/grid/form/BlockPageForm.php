@@ -106,7 +106,14 @@ class BlockPageForm extends \PKP\form\Form
                 'fields' => [
                     'html' => [ 'type' => 'textarea', 'title' => __('plugins.generic.blockPages.htmlBlock') ],
                 ],
-            ]
+            ],
+
+            'toc' => [
+                'title' => __('plugins.generic.blockPages.tocBlock'),
+                'fields' => [
+
+                ]
+            ],
 
         ];
         Hook::call('BlockPages::blocks', [ &$blocks ]);
