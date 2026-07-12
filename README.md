@@ -49,3 +49,5 @@ http://www.../index.php/pages/view/%PATH%, where %PATH% is a value you choose.
 
 This project is brought to you by [Invisible Dragon](https://invisibledragonltd.com/ojs/) in collaboration with
 [OICC Press](https://oiccpress.com/)
+
+If you've enjoyed this plugin, we'd appreciate a [thank you](https://invisibledragonltd.com/thankyou).
